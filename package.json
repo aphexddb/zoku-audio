@@ -1,0 +1,32 @@
+{
+  "name": "zoku-audio",
+  "version": "0.1.0",
+  "description": "Audio experiements",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:aphexddb/zoku-audio.git"
+  },
+  "keywords": [
+    "audio",
+    "creative",
+    "performance"
+  ],
+  "author": "Gardiner Allen <aphexddb@gmail.com>",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/aphexddb/zoku-audio/issues"
+  },
+  "homepage": "https://github.com/aphexddb/zoku-audio",
+  "engines": {
+    "node": ">=0.10.x"
+  },
+  "dependencies": {
+    "hoek": "^2.9.0",
+    "node-core-audio": "^0.4.1"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "zoku-audio-examples",
+  "version": "1.0.0",
+  "description": "Audio examples",
+  "author": "Gardiner Allen <aphexddb@gmail.com>",
+  "license": "BSD",
+  "engines": {
+    "node": ">=0.10.x"
+  },
+  "dependencies": {
+    "sentiment": "^1.0.2",
+    "twit": "^1.1.18"
+  }
+}
