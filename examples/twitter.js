@@ -1,85 +1,56 @@
 var util = require('util');
-var Twit = require('twit');
-var Sentiment = require('sentiment');
+var Oscillator = require('oscillators');
 var ZokuAudio = require('../index.js');
-
-
-
-var TwitterMood = function(mood, startingWatchList) {
-
-  // terms to listen for in firehose
-  var watchList = startingWatchList || ['love', 'hate'];
-
-  var T = new Twit({
-      consumer_key: process.env.TWITTER_CONSUMER_KEY
-    , consumer_secret: process.env.TWITTER_CONSUMER_SECRET
-    , access_token: process.env.TWITTER_ACCESS_TOKEN
-    , access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-  })
-
-  var totalScore = 0;
-  var eventCount = 0;
-  var rawMood = mood;
-  var stream = T.stream('statuses/filter', { track: watchList });
-
-  stream.on('tweet', function (tweet) {
-
-    // simple sentiment analysis using AFINN-111 wordlist
-    var s = Sentiment(tweet.text);
-    totalScore = totalScore + s.score;
-    eventCount = eventCount + 1;
-
-    // the mood is the average sentiment score
-    rawMood = totalScore / eventCount;
-
-    // Normalization mood by scaling between 0 and 1
-    eMax = 5.0;
-    eMin = -5.0;
-    //mood = (rawMood - eMin) / (eMax - eMin);
-    mood = (s.score - eMin) / (eMax - eMin);
-
-    // share the love
-    console.log(util.format("[%s] %s", mood, tweet.text));
-  });
-
-};
 
 console.log('Experimenting with Twitter mood.');
 
-var MOOD = 1.0;
-var moodTerms = ['comet','singularity'];
-var twitterMood = new TwitterMood(MOOD, moodTerms);
+var sharedMoodObj = { MOOD: 0.5 };
+ZokuAudio.TwitterMood(sharedMoodObj, {
+  track: ['#ferguson','protest','cop','thug','saint louis'],
+  language: 'en'
+});
 
-var Audio = new ZokuAudio.Audio();
+// Convert the mood from 0.0-1.0 range to -1.0,1.0 range so oscillators play nice
+var normalizeMood = function(m) {
+  var moodMin = 0.0;
+  var moodMax = 1.0;
+  var sinMin = -1.0;
+  var sinMax = 1.0;
+  return (((m - moodMin) * (sinMax - sinMin)) / (moodMax - moodMin)) + sinMin;
+};
+
+var AudioPort = new ZokuAudio.AudioPort();
+var ampBuffer = new Float32Array(4000); // microphone buffer
 
 // add a core audio callback
-Audio.addAudioCallback(function(engine) {
-
-  function saw (t,x) {
-    // TODO - do SOMETHING interesting with this!!
-    return 1-2*(t%(1/x))*x;
-  }
+AudioPort.addAudioCallback(function(engine) {
 
   var sample = 0;
-  var ampBuffer = new Float32Array(4000);
 
   engine.addAudioCallback(function(buffer) {
       var output = [];
+      var mood = normalizeMood(sharedMoodObj.MOOD)
+
       for (var i = 0; i < buffer.length; i++, sample++) {
 
           // Pan two sound-waves back and forth, opposing
           var val1 = Math.sin(sample * 110.0 * 2 * Math.PI / 44100.0) * 0.25, val2 = Math.sin(sample * 440.0 * 2 * Math.PI / 44100.0) * 0.25;
           var pan1 = Math.sin(1 * Math.PI * sample / 44100.0), pan2 = 1 - pan1;
+          var smooth_sine = val1 * pan2 + val2 * pan1;
 
-          // TODO - do SOMETHING interesting with this!!
-          var sawtooth = saw(MOOD,sample/1000);
-          var sine = val1 * pan2 + val2 * pan1;
+          // make some simple frequencies based on the sample value
+          var saw = Oscillator.saw(mood, sample);
+          var square = Oscillator.square(mood, sample);
+          var triangle = Oscillator.triangle(mood, sample);
+          var sine = Oscillator.sine(mood, sample);
 
-          output.push(sawtooth); //left channel
-          output.push(sine); //right channel
+          // create output buffer
+          output.push(triangle); //left channel
+          output.push(smooth_sine); //right channel
 
-          //Save microphone input into rolling buffer
+          // TODO - actually use this - save microphone input into rolling buffer
           ampBuffer[sample%ampBuffer.length] = buffer[i];
+
       }
       return output;
   });
