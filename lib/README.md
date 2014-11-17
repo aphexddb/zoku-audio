@@ -9,9 +9,8 @@ This maintains a realtime mood of Twitter based on search terms. The "Mood" is a
 Example use
 
     // Mood value to be updated
-    var MOOD = 1.0;
-
     var sharedMoodObj = { MOOD: 0.5 };
+    
     ZokuAudio.TwitterMood(sharedMoodObj, {
       track: ['#ferguson','protest','cop','thug','saint louis'],
       language: 'en'
