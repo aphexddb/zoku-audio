@@ -1,0 +1,26 @@
+{
+  "name": "twitter_mood",
+  "version": "1.0.0",
+  "description": "Audio experiement example",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Gardiner Allen <aphexddb@gmail.com>",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/aphexddb/zoku-audio/issues"
+  },
+  "homepage": "https://github.com/aphexddb/zoku-audio",
+  "dependencies": {
+    "good": "^4.0.0",
+    "good-console": "^2.0.1",
+    "hapi": "^7.5.2",
+    "hoek": "^2.9.0",
+    "oscillators": "^1.0.0",
+    "sentiment": "^1.0.2",
+    "twit": "^1.1.18",
+    "ws": "^0.5.0"
+  }
+}
