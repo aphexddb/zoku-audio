@@ -17,8 +17,9 @@ You will need a Twitter app created for tokens and secrets. Create [one here](ht
 * TWITTER_ACCESS_TOKEN
 * TWITTER_ACCESS_TOKEN_SECRET
 
-Example:
+To run:
 
+    npm install
     TWITTER_CONSUMER_KEY="xxx" TWITTER_CONSUMER_SECRET="xxx" TWITTER_ACCESS_TOKEN="xxx" TWITTER_ACCESS_TOKEN_SECRET="xxx" npm start
 
 Then open your browser to [http://127.0.0.1:8080](http://127.0.0.1:8080)
