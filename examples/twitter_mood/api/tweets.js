@@ -103,9 +103,14 @@ var handleTweetEvent = function (tweet) {
   internals.sharedMood.rawScore = tweetObj.rawScore;
   internals.sharedMood.avgScore = tweetObj.avgScore;
 
-  // if callback exists, call it!
+  // if websocket callback exists, call it!
   if (internals.tweetBroadcastCallback !== null) {
     internals.tweetBroadcastCallback(tweetObj);
+  }
+
+  // if OSC callback exists, call it!
+  if (internals.tweetOscCallback !== undefined) {
+    internals.tweetOscCallback(tweetObj);
   }
 };
 
@@ -130,7 +135,7 @@ var start = function(server) {
       }
     };
 
-    // setup our boradcast callback function
+    // setup our broadcast callback function
     internals.tweetBroadcastCallback = function(tweetObj) {
       wss.broadcast(JSON.stringify(tweetObj));
     };
@@ -171,4 +176,9 @@ var start = function(server) {
 
 };
 
+var setCallback = function(callback) {
+  internals.tweetOscCallback = callback;
+}
+
 module.exports.start = start;
+module.exports.setCallback = setCallback;

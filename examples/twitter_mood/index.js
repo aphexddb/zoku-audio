@@ -4,6 +4,7 @@ var Util = require('util');
 var server = require('./server');
 var Config = require('./config');
 var Tweets = require('./api/tweets');
+var Osc = require('./api/osc');
 var Oscillator = require('oscillators');
 var ZokuAudio = require('../../lib/index.js');
 
@@ -12,6 +13,13 @@ server.start(function () {
   // start upstream websocket server
   var sharedMood = Tweets.start(server);
 
+  // start OSC TCP emitter
+  var oscMoodCallback = Osc.start(server);
+
+  // attach the tweet callback
+  Tweets.setCallback(oscMoodCallback);
+
+/*
   // create audio connection
   var AudioPort = new ZokuAudio.AudioPort();
 
@@ -56,6 +64,7 @@ server.start(function () {
     server.log(['zoku-audio'], 'Added audio callback to generate tones from mood');
 
   });
+  */
 
   server.log(['zoku-audio'], Util.format('web server started at:', server.info.uri));
 });

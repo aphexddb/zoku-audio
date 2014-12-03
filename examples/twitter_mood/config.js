@@ -6,6 +6,7 @@ var GoodConsole = require('good-console');
 var env = process.env.NODE_ENV || process.env.ENV || 'development';
 var port = process.env.PORT || 8080;
 var wsPort = 8081;
+var oscPort = 8090;
 
 module.exports = {
   'app': {
@@ -17,6 +18,9 @@ module.exports = {
   },
   'ws': {
     'port': wsPort
+  },
+  'osc': {
+    'port': oscPort
   },
   'twitter': {
     'TWITTER_CONSUMER_KEY': process.env.TWITTER_CONSUMER_KEY,
