@@ -26,13 +26,15 @@ var internals = {
 
 // Api code
 
-// convert sentiment to 0-1 range
+// convert sentiment to 0-127 range
 var convertRange = function(input) {
+  input = parseInt(input);
   var inputLow = -9.0;
   var inputHigh = 9.0;
-  var outputLow = -1.0;
-  var outputHigh = 1.0;
-  return ((input - inputLow) / (inputHigh - inputLow)) * (outputHigh - outputLow) + outputLow;
+  var outputLow = 0;
+  var outputHigh = 127;
+  var val = ((input - inputLow) / (inputHigh - inputLow)) * (outputHigh - outputLow) + outputLow;
+  return Math.floor(val);
 }
 
 var initTwitter = function() {
@@ -65,15 +67,6 @@ var initTwitter = function() {
 
 };
 
-// convert sentiment to 0-1 range
-var convertRange = function(input) {
-  var inputLow = -9.0;
-  var inputHigh = 9.0;
-  var outputLow = -1.0;
-  var outputHigh = 1.0;
-  return ((input - inputLow) / (inputHigh - inputLow)) * (outputHigh - outputLow) + outputLow;
-}
-
 // action to take when tweet form stream is recieved
 var handleTweetEvent = function (tweet) {
   // create tweet object
@@ -97,7 +90,7 @@ var handleTweetEvent = function (tweet) {
   var totalScore = internals.scores.reduce(function(prevVal, currVal, index, array) {
     return prevVal + currVal;
   });
-  tweetObj.avgScore = convertRange(totalScore / internals.scores.length);
+  tweetObj.avgScore = Math.floor(totalScore / internals.scores.length);
 
   // update the shared mood object
   internals.sharedMood.rawScore = tweetObj.rawScore;
