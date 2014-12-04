@@ -1,0 +1,78 @@
+#N canvas 289 264 620 621 10;
+#X declare -lib mrpeach;
+#X text -30 547 Line out to soundcard.;
+#X obj -70 546 dac~;
+#X obj 75 207 vsl 15 128 2 12 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 7820 1;
+#X floatatom 75 373 5 0 0 0 - - -;
+#X obj 75 348 i;
+#X obj 256 204 vsl 15 128 0 12 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 6092 1;
+#X floatatom 256 364 5 0 0 0 - - -;
+#X obj 256 342 i;
+#X msg 75 178 8;
+#X msg 256 177 5;
+#X text 95 223 bit-depth control? in the sense of quantizing audio.
+similiar to decimate but without the sample-rate control;
+#X text 282 215 this control chooses a bit to invert;
+#X obj -70 397 expr~ if ($v1 == $f2 || $v1 == (-1 * $f2) \, -1*$v1
+\, $v1);
+#X obj -70 445 *~ 0.125;
+#X obj -25 422 expr 1 / $f1;
+#X obj -73 320 *~ 8;
+#X obj -73 350 quantize~ 1;
+#X obj 17 455 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 17 482 metro 200;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array visualize 300 float 0;
+#X coords 0 1 299 -1 300 150 1 0 0;
+#X restore 218 433 graph;
+#X obj -73 292 osc~ 440;
+#X obj -73 263 mtof;
+#X obj 14 515 tabwrite~ visualize;
+#X obj -75 -14 import mrpeach;
+#X text 29 -16 <-- Import mrpeach objects;
+#X text 25 17 <-- listen to port 41234;
+#X obj -73 45 unpackOSC;
+#X obj -73 20 udpreceive 8090;
+#X floatatom -73 125 5 0 0 0 - - -;
+#X obj 27 74 routeOSC /tweet;
+#X obj -73 100 routeOSC /raw /avg;
+#X floatatom -21 125 5 0 0 0 - - -;
+#X obj -73 73 routeOSC /mood;
+#X text -6 43 <-- route messages;
+#X obj 162 125 loadbang;
+#X text 48 99 <-- raw and avg mood scores (0-127);
+#X text 194 30 Receive OSC messages on Twitter mood (http://en.flossmanuals.net/pure-data/ch065_osc/)
+;
+#X connect 2 0 4 0;
+#X connect 3 0 14 0;
+#X connect 3 0 15 1;
+#X connect 4 0 3 0;
+#X connect 5 0 7 0;
+#X connect 6 0 12 1;
+#X connect 7 0 6 0;
+#X connect 8 0 2 0;
+#X connect 9 0 5 0;
+#X connect 12 0 13 0;
+#X connect 13 0 1 0;
+#X connect 13 0 1 1;
+#X connect 13 0 22 0;
+#X connect 14 0 13 1;
+#X connect 15 0 16 0;
+#X connect 16 0 12 0;
+#X connect 17 0 18 0;
+#X connect 18 0 22 0;
+#X connect 20 0 15 0;
+#X connect 21 0 20 0;
+#X connect 26 0 29 0;
+#X connect 26 0 32 0;
+#X connect 27 0 26 0;
+#X connect 30 0 28 0;
+#X connect 30 1 31 0;
+#X connect 31 0 21 0;
+#X connect 32 0 30 0;
+#X connect 34 0 9 0;
+#X connect 34 0 8 0;
+#X connect 34 0 17 0;
