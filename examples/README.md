@@ -2,13 +2,12 @@
 
 ### [twitter_mood](Twitter Mood)
 
+Open the puredata patch `twitter_mood/puredata/mood_fancy.pd` to hear audio
+
 * Gets mood from Twitter
-* Maps the mood to a `-1.0` to `1.0` range
-* Generates various waves using an [oscillator](https://github.com/NHQ/oscillators)
-* Emits audio to your left/right speakers
-* Emits tweets to a UI
-    * See scores
-    * Adjust Twitter search terms
+* Maps the mood to a `0` to `127` range
+* Emits mood over OSC (via UDP)
+* Provides a UI to see twitter messages and mood, as well as change filters
 
 You will need a Twitter app created for tokens and secrets. Create [one here](https://apps.twitter.com/app/7213267/keys). Then use those values in these environment variables as well:
 
